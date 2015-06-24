@@ -48,7 +48,8 @@ eslintTester.addRuleTest("lib/rules/handle-callback-err", {
         { code: "var test = function(error) { console.log(error); };", args: [2, "^(err|error)$"] },
         { code: "var test = function(anyError) { console.log(anyError); };", args: [2, "^.+Error$"] },
         { code: "var test = function(any_error) { console.log(anyError); };", args: [2, "^.+Error$"] },
-        { code: "var test = function(any_error) { console.log(any_error); };", args: [2, "^.+(e|E)rror$"] }
+        { code: "var test = function(any_error) { console.log(any_error); };", args: [2, "^.+(e|E)rror$"] },
+        { code: "var x = err => err;", args: [2, "err"], ecmaFeatures: { arrowFunctions: true } }
     ],
     invalid: [
         { code: "function test(err) {}", errors: [expectedFunctionDeclarationError] },
@@ -68,6 +69,7 @@ eslintTester.addRuleTest("lib/rules/handle-callback-err", {
         { code: "function help() { function userHandler(err) {function tester(err) { err; process.nextTick(function() { err; }); } } }", errors: [expectedFunctionDeclarationError]},
         { code: "var test = function(anyError) { console.log(otherError); };", args: [2, "^.+Error$"], errors: [expectedFunctionExpressionError]},
         { code: "var test = function(anyError) { };", args: [2, "^.+Error$"], errors: [expectedFunctionExpressionError]},
-        { code: "var test = function(err) { console.log(error); };", args: [2, "^(err|error)$"], errors: [expectedFunctionExpressionError]}
+        { code: "var test = function(err) { console.log(error); };", args: [2, "^(err|error)$"], errors: [expectedFunctionExpressionError]},
+        { code: "var x = err => 'foo';", args: [2, "err"], ecmaFeatures: { arrowFunctions: true }, errors: [{ message: expectedErrorMessage, type: "ArrowFunctionExpression" }] }
     ]
 });
